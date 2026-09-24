@@ -48,8 +48,10 @@ type Pet = {
   care: string;
 };
 
+const defaultPet: Pet = { name: "Dogs", emoji: "🐶", group: "Furry", note: "Loyal explorers", care: "Daily movement, enrichment, and routine" };
+
 const pets: Pet[] = [
-  { name: "Dogs", emoji: "🐶", group: "Furry", note: "Loyal explorers", care: "Daily movement, enrichment, and routine" },
+  defaultPet,
   { name: "Cats", emoji: "🐱", group: "Furry", note: "Curious companions", care: "Play, calm spaces, and clean essentials" },
   { name: "Rabbits", emoji: "🐰", group: "Furry", note: "Gentle grazers", care: "Hay-rich diets, room to hop, and company" },
   { name: "Birds", emoji: "🐦", group: "Feathered", note: "Bright little singers", care: "Social time, safe flight, and varied enrichment" },
@@ -88,14 +90,20 @@ const faqs = [
   ["Can I use the same routine for every pet?", "No. Species, age, health, personality, and home environment all matter. Use these ideas as a starting point and adapt with professional guidance."],
 ];
 
+const primaryNav: Array<[string, string]> = [["Pets", "pets"], ["Care", "care"], ["Services", "services"], ["Gallery", "gallery"], ["About", "about"]];
+const mobileNav: Array<[string, string]> = [["All Pets", "pets"], ["Care Guide", "care"], ["Safety", "safety"], ["Services", "services"], ["Gallery", "gallery"], ["Pet Tips", "tips"], ["About", "about"], ["Contact", "contact"]];
+const exploreLinks: Array<[string, string]> = [["All pets", "pets"], ["Care guide", "care"], ["Pet tips", "tips"], ["Gallery", "gallery"]];
+const companyLinks: Array<[string, string]> = [["About", "about"], ["Safety", "safety"], ["FAQ", "faq"], ["Contact", "contact"]];
+
 function PetLushPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
-  const [selectedPet, setSelectedPet] = useState(pets[0]);
+  const [selectedPet, setSelectedPet] = useState<Pet>(defaultPet);
   const [tipIndex, setTipIndex] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [showTop, setShowTop] = useState(false);
+  const [openFaq, setOpenFaq] = useState(0);
 
   useEffect(() => {
     const timer = window.setInterval(() => setTipIndex((current) => (current + 1) % tips.length), 6500);
@@ -136,6 +144,9 @@ function PetLushPage() {
     setMenuOpen(false);
   };
 
+  const activeTip = tips[tipIndex] ?? tips[0];
+  const activeImage = lightbox === null ? null : gallery[lightbox] ?? gallery[0];
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="site-header sticky-top">
@@ -145,7 +156,7 @@ function PetLushPage() {
             <span>PetLush</span>
           </button>
           <nav className="d-none d-lg-flex align-items-center gap-4" aria-label="Main navigation">
-            {[["Pets", "pets"], ["Care", "care"], ["Services", "services"], ["Gallery", "gallery"], ["About", "about"]].map(([label, id]) => (
+            {primaryNav.map(([label, id]) => (
               <button key={id} className="nav-link-soft" onClick={() => scrollTo(id)}>{label}</button>
             ))}
           </nav>
@@ -158,7 +169,7 @@ function PetLushPage() {
         </div>
         {menuOpen && (
           <nav className="mobile-nav d-lg-none" aria-label="Mobile navigation">
-            {[["All Pets", "pets"], ["Care Guide", "care"], ["Safety", "safety"], ["Services", "services"], ["Gallery", "gallery"], ["Pet Tips", "tips"], ["About", "about"], ["Contact", "contact"]].map(([label, id]) => (
+            {mobileNav.map(([label, id]) => (
               <button key={id} onClick={() => scrollTo(id)}>{label}</button>
             ))}
           </nav>
@@ -293,7 +304,7 @@ function PetLushPage() {
         <div className="container-xl">
           <div className="tip-stage">
             <div className="tip-label"><span className="tip-spark"><Sparkles /></span><span>Pet tip <b>{String(tipIndex + 1).padStart(2, "0")}</b></span></div>
-            <div className="tip-content" aria-live="polite"><span className="kicker">{tips[tipIndex].label}</span><blockquote>“{tips[tipIndex].text}”</blockquote></div>
+            <div className="tip-content" aria-live="polite"><span className="kicker">{activeTip?.label}</span><blockquote>“{activeTip?.text}”</blockquote></div>
             <div className="tip-controls">
               <Button variant="ghost" size="icon" onClick={() => setTipIndex((tipIndex - 1 + tips.length) % tips.length)} aria-label="Previous tip"><ChevronLeft /></Button>
               <div className="tip-dots" aria-hidden="true">{tips.map((_, index) => <span key={index} className={index === tipIndex ? "is-active" : ""} />)}</div>
@@ -313,7 +324,7 @@ function PetLushPage() {
       </section>
 
       <section id="faq" className="section-space faq-section">
-        <div className="container-xl"><div className="row g-5"><div className="col-12 col-lg-4"><span className="kicker">Good questions</span><h2>A little more <em>clarity.</em></h2><p>Care grows through asking, noticing, and learning.</p></div><div className="col-12 col-lg-8"><div className="accordion" id="petFaq">{faqs.map(([question, answer], index) => <div className="accordion-item" key={question}><h3 className="accordion-header"><button className={`accordion-button ${index === 0 ? "" : "collapsed"}`} type="button" data-bs-toggle="collapse" data-bs-target={`#faq-${index}`} aria-expanded={index === 0} aria-controls={`faq-${index}`}>{question}</button></h3><div id={`faq-${index}`} className={`accordion-collapse collapse ${index === 0 ? "show" : ""}`} data-bs-parent="#petFaq"><div className="accordion-body">{answer}</div></div></div>)}</div></div></div></div>
+        <div className="container-xl"><div className="row g-5"><div className="col-12 col-lg-4"><span className="kicker">Good questions</span><h2>A little more <em>clarity.</em></h2><p>Care grows through asking, noticing, and learning.</p></div><div className="col-12 col-lg-8"><div className="accordion">{faqs.map(([question, answer], index) => <div className="accordion-item" key={question}><h3 className="accordion-header"><button className={`accordion-button ${openFaq === index ? "" : "collapsed"}`} type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index} aria-controls={`faq-${index}`}>{question}</button></h3><div id={`faq-${index}`} className={`accordion-collapse collapse ${openFaq === index ? "show" : ""}`}><div className="accordion-body">{answer}</div></div></div>)}</div></div></div></div>
       </section>
 
       <section id="contact" className="section-space contact-section">
@@ -321,10 +332,10 @@ function PetLushPage() {
       </section>
 
       <footer className="site-footer">
-        <div className="container-xl"><div className="row g-5 align-items-start"><div className="col-12 col-lg-5"><div className="brand-lockup"><span className="brand-mark" aria-hidden="true">🐾</span><span>PetLush</span></div><p>Elevating Pet Care with Love.</p><small>General education only—not a substitute for veterinary advice.</small></div><div className="col-6 col-md-3 col-lg-2"><strong>Explore</strong>{[["All pets", "pets"], ["Care guide", "care"], ["Pet tips", "tips"], ["Gallery", "gallery"]].map(([label, id]) => <button key={id} onClick={() => scrollTo(id)}>{label}</button>)}</div><div className="col-6 col-md-3 col-lg-2"><strong>PetLush</strong>{[["About", "about"], ["Safety", "safety"], ["FAQ", "faq"], ["Contact", "contact"]].map(([label, id]) => <button key={id} onClick={() => scrollTo(id)}>{label}</button>)}</div><div className="col-12 col-md-6 col-lg-3"><strong>A softer inbox</strong><p>Occasional care ideas, no clutter.</p><div className="footer-signup"><input type="email" aria-label="Email for care ideas" placeholder="Email address" /><Button size="icon" aria-label="Join email list"><ArrowRight /></Button></div></div></div><div className="footer-bottom"><span>© 2026 PetLush</span><span>Made for happy tails, tiny paws, and bright feathers.</span></div></div>
+        <div className="container-xl"><div className="row g-5 align-items-start"><div className="col-12 col-lg-5"><div className="brand-lockup"><span className="brand-mark" aria-hidden="true">🐾</span><span>PetLush</span></div><p>Elevating Pet Care with Love.</p><small>General education only—not a substitute for veterinary advice.</small></div><div className="col-6 col-md-3 col-lg-2"><strong>Explore</strong>{exploreLinks.map(([label, id]) => <button key={id} onClick={() => scrollTo(id)}>{label}</button>)}</div><div className="col-6 col-md-3 col-lg-2"><strong>PetLush</strong>{companyLinks.map(([label, id]) => <button key={id} onClick={() => scrollTo(id)}>{label}</button>)}</div><div className="col-12 col-md-6 col-lg-3"><strong>A softer inbox</strong><p>Occasional care ideas, no clutter.</p><div className="footer-signup"><input type="email" aria-label="Email for care ideas" placeholder="Email address" /><Button size="icon" aria-label="Join email list"><ArrowRight /></Button></div></div></div><div className="footer-bottom"><span>© 2026 PetLush</span><span>Made for happy tails, tiny paws, and bright feathers.</span></div></div>
       </footer>
 
-      {lightbox !== null && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Pet gallery image"><Button variant="ghost" size="icon" className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close gallery"><X /></Button><Button variant="ghost" size="icon" className="lightbox-prev" onClick={() => setLightbox((lightbox - 1 + gallery.length) % gallery.length)} aria-label="Previous image"><ChevronLeft /></Button><figure><img src={gallery[lightbox].src} alt={gallery[lightbox].alt} /><figcaption>{gallery[lightbox].title}</figcaption></figure><Button variant="ghost" size="icon" className="lightbox-next" onClick={() => setLightbox((lightbox + 1) % gallery.length)} aria-label="Next image"><ChevronRight /></Button></div>}
+      {lightbox !== null && activeImage && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Pet gallery image"><Button variant="ghost" size="icon" className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close gallery"><X /></Button><Button variant="ghost" size="icon" className="lightbox-prev" onClick={() => setLightbox((lightbox - 1 + gallery.length) % gallery.length)} aria-label="Previous image"><ChevronLeft /></Button><figure><img src={activeImage.src} alt={activeImage.alt} /><figcaption>{activeImage.title}</figcaption></figure><Button variant="ghost" size="icon" className="lightbox-next" onClick={() => setLightbox((lightbox + 1) % gallery.length)} aria-label="Next image"><ChevronRight /></Button></div>}
       {showTop && <Button size="icon" className="back-to-top" onClick={() => scrollTo("home")} aria-label="Back to top"><ArrowUp /></Button>}
     </main>
   );
