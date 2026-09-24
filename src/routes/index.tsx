@@ -2,13 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight,
   ArrowUp,
+  Bird,
+  Cat,
   ChevronLeft,
   ChevronRight,
+  Dog,
+  Fish,
   Heart,
   Menu,
+  PawPrint,
+  Rabbit,
   Search,
   ShieldCheck,
   Sparkles,
+  Turtle,
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -94,6 +101,16 @@ const primaryNav: Array<[string, string]> = [["Pets", "pets"], ["Care", "care"],
 const mobileNav: Array<[string, string]> = [["All Pets", "pets"], ["Care Guide", "care"], ["Safety", "safety"], ["Services", "services"], ["Gallery", "gallery"], ["Pet Tips", "tips"], ["About", "about"], ["Contact", "contact"]];
 const exploreLinks: Array<[string, string]> = [["All pets", "pets"], ["Care guide", "care"], ["Pet tips", "tips"], ["Gallery", "gallery"]];
 const companyLinks: Array<[string, string]> = [["About", "about"], ["Safety", "safety"], ["FAQ", "faq"], ["Contact", "contact"]];
+
+function PetIcon({ name }: { name: string }) {
+  if (name === "Dogs") return <Dog aria-hidden="true" />;
+  if (name === "Cats") return <Cat aria-hidden="true" />;
+  if (name === "Rabbits") return <Rabbit aria-hidden="true" />;
+  if (name === "Fish") return <Fish aria-hidden="true" />;
+  if (name === "Turtles") return <Turtle aria-hidden="true" />;
+  if (name === "Hamsters") return <PawPrint aria-hidden="true" />;
+  return <Bird aria-hidden="true" />;
+}
 
 function PetLushPage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -219,7 +236,7 @@ function PetLushPage() {
             {visiblePets.map((pet) => (
               <div className="col-6 col-md-4 col-xl-3" key={pet.name}>
                 <button className={`pet-card ${selectedPet.name === pet.name ? "is-selected" : ""}`} onClick={() => setSelectedPet(pet)} aria-pressed={selectedPet.name === pet.name}>
-                  <span className="pet-emoji" aria-hidden="true">{pet.emoji}</span>
+                  <span className="pet-emoji"><PetIcon name={pet.name} /></span>
                   <span className="pet-card-title">{pet.name}</span>
                   <span className="pet-card-note">{pet.note}</span>
                   <span className="pet-card-arrow"><ArrowRight aria-hidden="true" /></span>
@@ -229,7 +246,7 @@ function PetLushPage() {
           </div>
           {visiblePets.length === 0 && <div className="empty-state">No pets match that search yet. Try a broader word.</div>}
           <div className="selected-pet-panel mt-4" aria-live="polite">
-            <span className="selected-pet-icon" aria-hidden="true">{selectedPet.emoji}</span>
+            <span className="selected-pet-icon"><PetIcon name={selectedPet.name} /></span>
             <div><span>Your care path</span><strong>{selectedPet.name}</strong><p>{selectedPet.care}</p></div>
             <Button className="clay-button ms-lg-auto" onClick={() => scrollTo("care")}>Start with {selectedPet.name.toLowerCase()} <ArrowRight /></Button>
           </div>

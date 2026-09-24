@@ -119,14 +119,16 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .pet-card { width: 100%; min-height: 15.5rem; position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; overflow: hidden; text-align: left; padding: 1.35rem; border: 2px solid transparent; border-radius: 1.8rem; background: var(--card); color: var(--foreground); box-shadow: var(--shadow-clay); transition: transform .25s ease, border-color .25s ease; }
 .pet-card:hover { transform: translateY(-6px) rotate(-1deg); }
 .pet-card.is-selected { border-color: var(--primary); }
-.pet-emoji { position: absolute; top: 1rem; right: 1rem; font-size: 4.6rem; filter: drop-shadow(0 8px 8px color-mix(in oklab, var(--sage-deep) 15%, transparent)); transition: transform .25s ease; }
+.pet-emoji { position: absolute; top: 1.15rem; right: 1.15rem; display: grid; place-items: center; width: 5rem; height: 5rem; border-radius: 1.5rem; color: var(--sage-deep); background: color-mix(in oklab, var(--sage) 68%, var(--card)); box-shadow: var(--shadow-clay); transition: transform .25s ease; }
+.pet-emoji svg { width: 2.7rem; height: 2.7rem; stroke-width: 1.65; }
 .pet-card:hover .pet-emoji { transform: scale(1.08) rotate(4deg); }
 .pet-card-title { font-family: "DM Serif Display", serif; font-size: 1.65rem; }
 .pet-card-note { color: var(--muted-foreground); font-size: .86rem; margin-top: .15rem; }
 .pet-card-arrow { position: absolute; right: 1.1rem; bottom: 1.1rem; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--sage); }
 .pet-card-arrow svg { width: 1rem; }
 .selected-pet-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: 1.2rem; border-radius: 1.7rem; background: var(--sage); box-shadow: var(--shadow-clay); }
-.selected-pet-icon { display: grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 1.3rem; background: var(--card); font-size: 2.4rem; box-shadow: var(--shadow-clay); }
+.selected-pet-icon { display: grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 1.3rem; background: var(--card); color: var(--sage-deep); box-shadow: var(--shadow-clay); }
+.selected-pet-icon svg { width: 2.3rem; height: 2.3rem; }
 .selected-pet-panel div { display: grid; }
 .selected-pet-panel div span { color: var(--sage-deep); font-size: .7rem; text-transform: uppercase; font-weight: 900; letter-spacing: .12em; }
 .selected-pet-panel strong { font-family: "DM Serif Display", serif; font-size: 1.5rem; }
@@ -241,7 +243,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
 .lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 4rem; background: color-mix(in oklab, var(--foreground) 92%, transparent); backdrop-filter: blur(18px); }
 .lightbox figure { margin: 0; max-width: min(78rem, 85vw); }
-.lightbox figure img { display: block; max-width: 100%; max-height: 78vh; border-radius: 1.4rem; box-shadow: 0 24px 70px color-mix(in oklab, black 45%, transparent); }
+.lightbox figure img { display: block; max-width: 100%; max-height: 78vh; border-radius: 1.4rem; box-shadow: 0 24px 70px color-mix(in oklab, var(--foreground) 45%, transparent); }
 .lightbox figcaption { color: var(--background); text-align: center; font-family: "DM Serif Display", serif; font-size: 1.3rem; padding-top: .8rem; }
 .lightbox button { position: absolute; width: 3.3rem; height: 3.3rem; border-radius: 50%; background: color-mix(in oklab, var(--background) 12%, transparent); color: var(--background); }
 .lightbox-close { top: 1.3rem; right: 1.3rem; }
@@ -265,7 +267,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .hero-copy h1 { font-size: clamp(3.25rem, 15vw, 4.4rem); }
   .section-space { padding-block: 4.8rem; }
   .pet-card { min-height: 13rem; padding: 1rem; }
-  .pet-emoji { font-size: 3.5rem; }
+  .pet-emoji { width: 4.2rem; height: 4.2rem; }
+  .pet-emoji svg { width: 2.3rem; height: 2.3rem; }
   .pet-card-arrow { display: none; }
   .selected-pet-panel { align-items: flex-start; }
   .selected-pet-panel .clay-button { width: 100%; margin-top: .4rem; }
